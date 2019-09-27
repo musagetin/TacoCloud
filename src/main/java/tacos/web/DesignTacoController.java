@@ -9,13 +9,16 @@ import org.springframework.web.bind.annotation.*;
 import tacos.Ingredient;
 import tacos.Order;
 import tacos.Taco;
+import tacos.User;
 import tacos.data.IngredientRepository;
 import tacos.data.TacoRepository;
+import tacos.data.UserRepository;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.security.Principal;
 
 import static tacos.Ingredient.Type;
 
@@ -29,10 +32,13 @@ public class DesignTacoController {
 
     private TacoRepository designRepo;
 
+    private UserRepository userRepo;
+
     @Autowired
-    public DesignTacoController(IngredientRepository ingredientRepo, TacoRepository designRepo) {
+    public DesignTacoController(IngredientRepository ingredientRepo, TacoRepository designRepo, UserRepository userRepo) {
         this.ingredientRepo = ingredientRepo;
         this.designRepo = designRepo;
+        this.userRepo = userRepo;
     }
 
     @ModelAttribute(name = "order")
@@ -55,18 +61,18 @@ public class DesignTacoController {
             model.addAttribute(type.toString().toLowerCase(),
                     filterByType(ingredients, type));
         }
+
+
     }
 
     @GetMapping
-    public String showDesignForm(Model model) {
-        /*List<Ingredient> ingredients = new ArrayList<>();
-        ingredientRepo.findAll().forEach(i -> ingredients.add(i));
+    public String showDesignForm(Model model, Principal principal) {
 
-        Type[] types = Ingredient.Type.values();
-        for (Type type : types) {
-            model.addAttribute(type.toString().toLowerCase(),
-                    filterByType(ingredients, type));
-        }*/
+        log.info("   --- Designing taco");
+
+        String username = principal.getName();
+        User user = userRepo.findByUsername(username);
+        model.addAttribute("user", user);
 
         return "design";
     }
@@ -77,6 +83,8 @@ public class DesignTacoController {
         if (errors.hasErrors()) {
             return "design";
         }
+
+        log.info("   --- Saving taco");
 
         Taco saved = designRepo.save(design);
         order.addDesign(saved);
