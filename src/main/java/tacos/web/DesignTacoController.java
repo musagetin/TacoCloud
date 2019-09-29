@@ -15,10 +15,10 @@ import tacos.data.TacoRepository;
 import tacos.data.UserRepository;
 
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.security.Principal;
 
 import static tacos.Ingredient.Type;
 
@@ -61,8 +61,6 @@ public class DesignTacoController {
             model.addAttribute(type.toString().toLowerCase(),
                     filterByType(ingredients, type));
         }
-
-
     }
 
     @GetMapping

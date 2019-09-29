@@ -9,7 +9,7 @@
 <body>
 <h1>Welcome to ... ‿︵‿ヽ(°□° )ノ︵‿︵</h1>
 <img th:src="@{/images/TacoCloud.png}" alt="Maybe taco"/>
-<form method="POST" th:action="@{/logout}">
+<form method="POST" th:action="@{/logout}" id="logoutForm">
     <input type="submit" value="Logout"/>
 </form>
 <a th:href="@{/design}" id="design">Design a taco</a>
